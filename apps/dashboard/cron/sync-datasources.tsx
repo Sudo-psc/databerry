@@ -3,7 +3,9 @@ import pMap from 'p-map';
 
 import logger from '@chaindesk/lib/logger';
 import triggerTaskLoadDatasource from '@chaindesk/lib/trigger-task-load-datasource';
-import { prisma } from '@chaindesk/prisma/client';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 (async () => {
   logger.info(`Starting cron job: Sync Datasources`);
