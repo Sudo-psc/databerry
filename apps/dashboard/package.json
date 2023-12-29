@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "_dev": "npm run dotenv -- next dev | pino-pretty --colorize",
+    "prepare-package-lock": "npm install && git add package-lock.json && git commit -m \"Add package-lock.json for npm ci command\" && git push origin <your-branch-name>",
     "dev": "concurrently \"pnpm _dev\" \"pnpm worker:datasource-loader\"",
     "dev:all:test": "NODE_ENV=test APP_ENV=test concurrently \"pnpm dev -p 3042\" \"pnpm worker:datasource-loader\"",
     "build": "npm run dotenv -- next build",
