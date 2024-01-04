@@ -8,7 +8,9 @@ import { prisma } from '@chaindesk/prisma/client';
 (async () => {
   logger.info(`Starting cron job: Sync Datasources`);
 
-  const datasources = await prisma.appDatasource.findMany({
+  let datasources;
+try {
+  datasources = await prisma.appDatasource.findMany({
     where: {
       group: {
         // do not include datasource part of a group as the group will handle the sync
@@ -37,6 +39,15 @@ import { prisma } from '@chaindesk/prisma/client';
       organizationId: true,
     },
   });
+
+if (!process.env.DATABASE_URL) {
+  logger.error('DATABASE_URL environment variable is not set or empty');
+  process.exit(1);
+}
+} catch (error) {
+  logger.error(`Error fetching datasources: ${error.message}`);
+  process.exit(1);
+}
 
   logger.info(`Triggering synch for ${datasources.length} datasources`);
 
