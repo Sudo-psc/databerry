@@ -1,4 +1,9 @@
 import { DatasourceType } from '@prisma/client';
+
+if (!process.env.DATABASE_URL) {
+  console.error('Error: The DATABASE_URL environment variable is not set.');
+  process.exit(1);
+}
 import pMap from 'p-map';
 
 import logger from '@chaindesk/lib/logger';
