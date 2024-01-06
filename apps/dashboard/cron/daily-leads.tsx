@@ -4,7 +4,15 @@ import React from 'react';
 import { DailyLeads, render } from '@chaindesk/emails';
 import { generateExcelBuffer } from '@chaindesk/lib/export/excel-export';
 import logger from '@chaindesk/lib/logger';
-import nodemailer from 'nodemailer';
+const transporter = nodemailer.createTransport(
+  {
+    service: 'gmail',
+    auth: {
+      user: 'user@gmail.com',
+      pass: 'password'
+    }
+  }
+);
 import { Lead, Organization, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
