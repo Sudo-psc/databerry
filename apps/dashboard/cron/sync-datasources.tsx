@@ -2,13 +2,20 @@ import { DatasourceType } from '@prisma/client';
 import pMap from 'p-map';
 
 import logger from '@chaindesk/lib/logger';
+import { env } from 'dotenv';
 import triggerTaskLoadDatasource from '@chaindesk/lib/trigger-task-load-datasource';
 import { prisma } from '@chaindesk/prisma/client';
 
 (async () => {
   logger.info(`Starting cron job: Sync Datasources`);
 
-  const datasources = await prisma.appDatasource.findMany({
+  const databaseUrl = env('DATABASE_URL');
+if (!databaseUrl) {
+  throw new Error('Error validating datasource `db`: You must provide a nonempty URL for DATABASE_URL.');
+  throw new Error('The environment variable DATABASE_URL must not be empty.');
+}
+
+const datasources = await prisma.appDatasource.findMany({
     where: {
       group: {
         // do not include datasource part of a group as the group will handle the sync
@@ -40,7 +47,11 @@ import { prisma } from '@chaindesk/prisma/client';
 
   logger.info(`Triggering synch for ${datasources.length} datasources`);
 
-  await triggerTaskLoadDatasource(
+  if (!datasources.length) {
+  throw new Error('No datasources found');
+}
+
+await triggerTaskLoadDatasource(
     datasources.map((each) => ({
       organizationId: each.organizationId!,
       datasourceId: each.id!,
