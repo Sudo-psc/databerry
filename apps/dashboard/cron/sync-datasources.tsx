@@ -2,10 +2,15 @@ import { DatasourceType } from '@prisma/client';
 import pMap from 'p-map';
 
 import logger from '@chaindesk/lib/logger';
+import dotenv from 'dotenv';
+import path from 'path';
 import triggerTaskLoadDatasource from '@chaindesk/lib/trigger-task-load-datasource';
 import { prisma } from '@chaindesk/prisma/client';
 
 (async () => {
+  dotenv.config({
+    path: path.resolve(__dirname, '../../.env')
+  });
   logger.info(`Starting cron job: Sync Datasources`);
 
   const datasources = await prisma.appDatasource.findMany({
