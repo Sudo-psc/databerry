@@ -2,13 +2,24 @@ import { DatasourceType } from '@prisma/client';
 import pMap from 'p-map';
 
 import logger from '@chaindesk/lib/logger';
+import dotenv from 'dotenv';
+import path from 'path';
 import triggerTaskLoadDatasource from '@chaindesk/lib/trigger-task-load-datasource';
-import { prisma } from '@chaindesk/prisma/client';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 (async () => {
+  dotenv.config({
+    path: path.resolve(__dirname, '../../.env')
+  });
   logger.info(`Starting cron job: Sync Datasources`);
 
-  const datasources = await prisma.appDatasource.findMany({
+  if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is not defined or empty');
+}
+
+const datasources = await prisma.appDatasource.findMany({
     where: {
       group: {
         // do not include datasource part of a group as the group will handle the sync
