@@ -33,6 +33,7 @@ import { prisma } from '@chaindesk/prisma/client';
       },
     },
     select: {
+        url: { equals: DATABASE_URL, },
       id: true,
       organizationId: true,
     },
