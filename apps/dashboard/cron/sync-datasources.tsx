@@ -38,7 +38,7 @@ import { prisma } from '@chaindesk/prisma/client';
     },
   });
 
-  logger.info(`Triggering synch for ${datasources.length} datasources`);
+  logger.info(`Triggering sync for ${datasources.length} datasources`);
 
   await triggerTaskLoadDatasource(
     datasources.map((each) => ({
