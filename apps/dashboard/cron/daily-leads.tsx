@@ -2,6 +2,7 @@ import pMap from 'p-map';
 import React from 'react';
 
 import { DailyLeads, render } from '@chaindesk/emails';
+import dotenv from 'dotenv';
 import { generateExcelBuffer } from '@chaindesk/lib/export/excel-export';
 import logger from '@chaindesk/lib/logger';
 import nodemailer from 'nodemailer';
@@ -48,7 +49,9 @@ const createReport = async (org: Organization) => {
 
   const buffer = await generateExcelBuffer<Lead>({ header, rows });
 
-  const transporter = nodemailer.createTransport({
+  dotenv.config();
+
+const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
   secure: process.env.SMTP_SECURE,
