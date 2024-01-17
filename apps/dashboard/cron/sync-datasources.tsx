@@ -12,7 +12,7 @@ import { prisma } from '@chaindesk/prisma/client';
     where: {
       group: {
         // do not include datasource part of a group as the group will handle the sync
-        is: null,
+        is: null
       },
       type: {
         in: [
