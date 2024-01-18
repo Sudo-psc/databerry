@@ -4,6 +4,7 @@ import React from 'react';
 import { DailyLeads, render } from '@chaindesk/emails';
 import { generateExcelBuffer } from '@chaindesk/lib/export/excel-export';
 import logger from '@chaindesk/lib/logger';
+import { createTransport } from 'nodemailer';
 import mailer from '@chaindesk/lib/mailer';
 import { Lead, Organization, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
