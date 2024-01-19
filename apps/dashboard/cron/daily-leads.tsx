@@ -1,34 +1,4 @@
-import pMap from 'p-map';
-import React from 'react';
-
-import { DailyLeads, render } from '@chaindesk/emails';
-import { generateExcelBuffer } from '@chaindesk/lib/export/excel-export';
-import logger from '@chaindesk/lib/logger';
-import { createTransport, mailer } from '@chaindesk/lib/mailer';
-import { Lead, Organization, Prisma } from '@chaindesk/prisma';
-import { prisma } from '@chaindesk/prisma/client';
-
-const createReport = async (org: Organization) => {
-  const now = new Date();
-  const ystd = new Date();
-  ystd.setDate(now.getDate() - 1);
-
-  const leads = await prisma.lead.findMany({
-    where: {
-      organizationId: org.id,
-      createdAt: {
-        gte: ystd,
-        lte: now,
-      },
-    },
-    include: {
-      agent: {
-        select: {
-          name: true,
-        },
-      },
-    },
-  });
+const transporter = createTransport();
 
   const ownerEmail = (org as any).memberships[0].user.email as string;
   if (leads?.length <= 0 && ownerEmail) {
