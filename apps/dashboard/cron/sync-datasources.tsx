@@ -1,15 +1,17 @@
-import { DatasourceType } from '@prisma/client';
+import { DatasourceType, PrismaClient } from '@prisma/client';
 import pMap from 'p-map';
 
 import logger from '@chaindesk/lib/logger';
 import triggerTaskLoadDatasource from '@chaindesk/lib/trigger-task-load-datasource';
-import { prisma } from '@chaindesk/prisma/client';
+import { prisma, PrismaClient } from '@prisma/client';
 
 (async () => {
   logger.info(`Starting cron job: Sync Datasources`);
 
   const datasources = await prisma.appDatasource.findMany({
     where: {
+      url: process.env.DATABASE_URL,
+      
       group: {
         // do not include datasource part of a group as the group will handle the sync
         is: null,
