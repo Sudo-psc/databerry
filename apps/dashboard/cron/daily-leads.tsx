@@ -3,7 +3,7 @@ import React from 'react';
 
 import { DailyLeads, render } from '@chaindesk/emails';
 import { generateExcelBuffer } from '@chaindesk/lib/export/excel-export';
-import logger from '@chaindesk/lib/logger';
+import { createTransport } from 'nodemailer';
 import mailer from '@chaindesk/lib/mailer';
 import { Lead, Organization, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
@@ -71,7 +71,7 @@ const createReport = async (org: Organization) => {
 };
 
 (async () => {
-  logger.info('Starting cron job: daily-leads');
+  const transporter = createTransport();
   const orgs = await prisma.organization.findMany({
     where: {
       subscriptions: {
