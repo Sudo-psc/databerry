@@ -1,4 +1,6 @@
 import { DatasourceType } from '@prisma/client';
+import dotenv from 'dotenv';
+dotenv.config();
 import pMap from 'p-map';
 
 import logger from '@chaindesk/lib/logger';
@@ -8,7 +10,9 @@ import { prisma } from '@chaindesk/prisma/client';
 (async () => {
   logger.info(`Starting cron job: Sync Datasources`);
 
-  const datasources = await prisma.appDatasource.findMany({
+  require('dotenv').config();
+
+const datasources = await prisma.appDatasource.findMany({
     where: {
       group: {
         // do not include datasource part of a group as the group will handle the sync
