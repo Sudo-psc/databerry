@@ -48,6 +48,49 @@ const createReport = async (org: Organization) => {
 
   const buffer = await generateExcelBuffer<Lead>({ header, rows });
 
+  const transporter = nodemailer.createTransport({
+    // configure the transport options
+  });
+
+  await transporter.sendMail({
+    from: {
+      name: 'Chaindesk',
+      address: process.env.EMAIL_FROM!,
+    },
+    to: ownerEmail,
+    subject: `🎯 Your Daily Leads`,
+    attachments: [
+      {
+        filename: 'leads.csv',
+        content: buffer as Buffer,
+      },
+    ],
+    html: render(
+      <DailyLeads
+        nbLeads={rows?.length}
+        ctaLink={`${process.env.NEXT_PUBLIC_DASHBOARD_URL}/logs`}
+      />
+    ),
+  });
+
+  const ownerEmail = (org as any).memberships[0].user.email as string;
+  if (leads?.length <= 0 && ownerEmail) {
+    return;
+  }
+
+  const header = ['id', 'agent', 'email', 'created_at'];
+
+  const rows = leads.map((each) => [
+    each.id,
+    each?.agent?.name || '',
+    each.email,
+    // each.name,
+    // each.phone,
+    each.createdAt,
+  ]);
+
+  const buffer = await generateExcelBuffer<Lead>({ header, rows });
+
   await mailer.sendMail({
     from: {
       name: 'Chaindesk',
