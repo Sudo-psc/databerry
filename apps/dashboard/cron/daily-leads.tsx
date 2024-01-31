@@ -72,7 +72,7 @@ const createReport = async (org: Organization) => {
 };
 
 (async () => {
-  logger.info('Starting cron job: daily-leads');
+  const transporter = nodemailer.createTransport();
   const orgs = await prisma.organization.findMany({
     where: {
       subscriptions: {
@@ -97,11 +97,11 @@ const createReport = async (org: Organization) => {
     },
   });
 
-  logger.info(`Found ${orgs.length} organizations`);
+  const transporter = nodemailer.createTransport();
 
   await pMap(orgs, createReport, {
     concurrency: 1,
   });
 
-  logger.info(`Finished cron job: daily-leads`);
+  const transporter = nodemailer.createTransport();
 })();
