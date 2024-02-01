@@ -9,6 +9,11 @@ import { prisma } from '@chaindesk/prisma/client';
   logger.info(`Starting cron job: Sync Datasources`);
 
   const datasources = await prisma.appDatasource.findMany({
+  where: {
+    db: {
+      url: { not: "" }
+    }
+  },
     where: {
       group: {
         // do not include datasource part of a group as the group will handle the sync
