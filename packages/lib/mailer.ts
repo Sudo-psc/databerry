@@ -1,5 +1,13 @@
-import nodemailer from 'nodemailer';
+import * as nodemailer from 'nodemailer';
 
-const mailer = nodemailer.createTransport(process.env.EMAIL_SERVER);
+const mailer = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: process.env.EMAIL_SECURE === 'true',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 export default mailer;
